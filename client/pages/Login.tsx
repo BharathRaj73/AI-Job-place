@@ -47,7 +47,18 @@ export default function Login() {
   }
 
   const handleGoogleSignIn = () => {
-    navigate("/dashboard/job-seeker")
+    const userData = {
+      id: Date.now(),
+      firstName: "John",
+      lastName: "Doe",
+      email: "john.doe@gmail.com",
+      userType: "job_seeker",
+      isAuthenticated: true,
+      profileCompleted: true,
+    }
+
+    login(userData)
+    navigate("/profile")
   }
 
   return (
