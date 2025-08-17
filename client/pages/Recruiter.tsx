@@ -938,13 +938,22 @@ export default function Recruiter() {
                           </p>
                         </div>
                         <div className="flex gap-2">
+                          {selectedApplications.length > 0 && (
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={handleDeleteSelectedApplications}
+                            >
+                              Delete Selected ({selectedApplications.length})
+                            </Button>
+                          )}
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => handleBulkDeleteApplications(jobId)}
                             className="text-destructive hover:text-destructive"
                           >
-                            Delete All Applications
+                            Delete All
                           </Button>
                           <Button
                             variant="outline"
