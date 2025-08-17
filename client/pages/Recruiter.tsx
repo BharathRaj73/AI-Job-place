@@ -911,12 +911,22 @@ export default function Recruiter() {
                             {jobApplications.length} candidates have applied
                           </p>
                         </div>
-                        <Button
-                          variant="outline"
-                          onClick={() => setActiveTab("dashboard")}
-                        >
-                          Back to Jobs
-                        </Button>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleBulkDeleteApplications(jobId)}
+                            className="text-destructive hover:text-destructive"
+                          >
+                            Delete All Applications
+                          </Button>
+                          <Button
+                            variant="outline"
+                            onClick={() => setActiveTab("dashboard")}
+                          >
+                            Back to Jobs
+                          </Button>
+                        </div>
                       </div>
 
                       <div className="grid gap-4">
