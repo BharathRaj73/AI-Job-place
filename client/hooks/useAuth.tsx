@@ -32,14 +32,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Check for existing user data on app load
-    const userData = localStorage.getItem("user");
+    const userData = localStorage.getItem("currentUser");
     if (userData) {
       try {
         const parsedUser = JSON.parse(userData);
         setUser(parsedUser);
       } catch (error) {
         console.error("Failed to parse user data:", error);
-        localStorage.removeItem("user");
+        localStorage.removeItem("currentUser");
       }
     }
   }, []);
