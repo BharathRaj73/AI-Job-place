@@ -158,7 +158,32 @@ export default function Recruiter() {
     if (confirm("Are you sure you want to delete ALL applications for this job? This action cannot be undone.")) {
       const updatedApplications = applications.filter(app => app.jobId !== jobId);
       setApplications(updatedApplications);
+      setSelectedApplications([]);
       alert("All applications for this job have been deleted!");
+    }
+  };
+
+  // Function to toggle application selection
+  const toggleApplicationSelection = (applicationId: number) => {
+    setSelectedApplications(prev =>
+      prev.includes(applicationId)
+        ? prev.filter(id => id !== applicationId)
+        : [...prev, applicationId]
+    );
+  };
+
+  // Function to delete selected applications
+  const handleDeleteSelectedApplications = () => {
+    if (selectedApplications.length === 0) {
+      alert("Please select applications to delete.");
+      return;
+    }
+
+    if (confirm(`Are you sure you want to delete ${selectedApplications.length} selected applications? This action cannot be undone.`)) {
+      const updatedApplications = applications.filter(app => !selectedApplications.includes(app.id));
+      setApplications(updatedApplications);
+      setSelectedApplications([]);
+      alert(`${selectedApplications.length} applications deleted successfully!`);
     }
   };
 
