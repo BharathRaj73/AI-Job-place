@@ -23,26 +23,28 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Homepage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/onboarding" element={<Onboarding />} />
-          <Route path="/dashboard/job-seeker" element={<JobSeekerDashboard />} />
-          <Route path="/job/:jobId" element={<JobDetail />} />
-          <Route path="/tech-news" element={<TechNews />} />
-          <Route path="/recruiter" element={<Recruiter />} />
-          <Route path="/dashboard/:type" element={<Dashboard />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+    <AuthProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Homepage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/onboarding" element={<Onboarding />} />
+            <Route path="/dashboard/job-seeker" element={<JobSeekerDashboard />} />
+            <Route path="/job/:jobId" element={<JobDetail />} />
+            <Route path="/tech-news" element={<TechNews />} />
+            <Route path="/recruiter" element={<Recruiter />} />
+            <Route path="/dashboard/:type" element={<Dashboard />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </AuthProvider>
   </QueryClientProvider>
 );
 
