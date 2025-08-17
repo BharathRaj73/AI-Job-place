@@ -23,7 +23,7 @@ export default function Onboarding() {
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       if (selectedType === "job_seeker") {
-        navigate("/dashboard/job-seeker");
+        navigate("/signup");
       } else {
         navigate("/dashboard/recruiter");
       }
