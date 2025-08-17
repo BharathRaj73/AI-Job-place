@@ -24,11 +24,8 @@ export default function Onboarding() {
     setError("");
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      if (selectedType === "job_seeker") {
-        navigate("/signup");
-      } else {
-        navigate("/dashboard/recruiter");
-      }
+      // Both user types go to signup with their selected type
+      navigate("/signup", { state: { userType: selectedType } });
     } catch {
       setError("Onboarding failed. Please try again.");
     } finally {
