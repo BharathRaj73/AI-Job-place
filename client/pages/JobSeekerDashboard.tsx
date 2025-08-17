@@ -553,6 +553,70 @@ export default function JobSeekerDashboard() {
         <main className="flex-1 p-6">
           {activeTab === "feed" && (
             <div className="space-y-6">
+              {/* Profile Summary Card */}
+              <Card className="border-blue-200 bg-blue-50/50">
+                <CardContent className="p-6">
+                  <div className="flex items-start justify-between">
+                    <div className="flex gap-4">
+                      <Avatar className="w-16 h-16">
+                        <AvatarImage src={profile.profilePhoto} />
+                        <AvatarFallback className="text-lg bg-blue-100 text-blue-700">
+                          {profile.firstName?.charAt(0) || "J"}
+                          {profile.lastName?.charAt(0) || "S"}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold text-foreground">
+                          Welcome back, {profile.firstName || "Job Seeker"}!
+                        </h3>
+                        <p className="text-sm text-muted-foreground mb-2">
+                          {profile.email}
+                        </p>
+                        {profile.jobTitle && (
+                          <p className="text-sm text-blue-700 font-medium">
+                            {profile.jobTitle}
+                          </p>
+                        )}
+
+                        {/* Missing information alerts */}
+                        <div className="mt-3 space-y-1">
+                          {!profile.jobTitle && (
+                            <p className="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded inline-block mr-2">
+                              Add job title to improve matches
+                            </p>
+                          )}
+                          {!profile.phone && (
+                            <p className="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded inline-block mr-2">
+                              Add phone number
+                            </p>
+                          )}
+                          {profile.skills.length === 0 && (
+                            <p className="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded inline-block mr-2">
+                              Add skills to get better job matches
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setActiveTab("profile")}
+                        className="mb-2"
+                      >
+                        Complete Profile
+                      </Button>
+                      <div className="text-xs text-muted-foreground">
+                        Profile {Math.floor((
+                          [profile.firstName, profile.lastName, profile.email, profile.jobTitle, profile.phone].filter(Boolean).length / 5
+                        ) * 100)}% complete
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
               {/* Stats Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {stats.map((stat, index) => (
