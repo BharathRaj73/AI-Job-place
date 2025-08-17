@@ -134,7 +134,15 @@ export default function Onboarding() {
           <div className="text-center">
             <Button
               variant="link"
-              onClick={() => navigate("/login")}
+              onClick={() => {
+                // If user exists and is authenticated, go to profile page
+                // Otherwise, go to login page
+                if (user?.isAuthenticated) {
+                  navigate("/profile");
+                } else {
+                  navigate("/login");
+                }
+              }}
               className="text-gray-500 hover:text-gray-800"
             >
               Back to sign in
