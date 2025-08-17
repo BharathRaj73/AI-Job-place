@@ -177,7 +177,58 @@ export default function Recruiter() {
 
     localStorage.setItem("jobPosts", JSON.stringify(sampleJobs));
     setJobPosts(sampleJobs);
-    alert("Sample job posts added successfully!");
+
+    // Add sample applications for the job posts
+    const sampleApplications = [
+      {
+        id: 1,
+        jobId: sampleJobs[0].id, // For Senior Frontend Developer
+        jobTitle: sampleJobs[0].title,
+        candidateName: "Alex Johnson",
+        candidateEmail: "alex.johnson@email.com",
+        candidatePhone: "+1 (555) 987-6543",
+        experience: "5 years",
+        skills: ["React", "TypeScript", "Node.js"],
+        appliedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
+        status: "pending",
+        resumeUrl: "#",
+        coverLetter: "I am excited to apply for this Senior Frontend Developer position. With 5 years of experience in React and TypeScript, I believe I would be a great fit for your team.",
+        matchScore: 95,
+      },
+      {
+        id: 2,
+        jobId: sampleJobs[0].id, // For Senior Frontend Developer
+        jobTitle: sampleJobs[0].title,
+        candidateName: "Sarah Chen",
+        candidateEmail: "sarah.chen@email.com",
+        candidatePhone: "+1 (555) 123-7890",
+        experience: "6 years",
+        skills: ["React", "GraphQL", "AWS"],
+        appliedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
+        status: "reviewing",
+        resumeUrl: "#",
+        coverLetter: "Hello! I'm very interested in the Senior Frontend Developer role. My experience includes building scalable React applications with GraphQL and AWS integration.",
+        matchScore: 88,
+      },
+      {
+        id: 3,
+        jobId: sampleJobs[1].id, // For Product Manager
+        jobTitle: sampleJobs[1].title,
+        candidateName: "Mike Rodriguez",
+        candidateEmail: "mike.rodriguez@email.com",
+        candidatePhone: "+1 (555) 456-1234",
+        experience: "4 years",
+        skills: ["Product Management", "Analytics", "Agile", "SQL"],
+        appliedAt: new Date().toISOString(), // Today
+        status: "pending",
+        resumeUrl: "#",
+        coverLetter: "I'm excited about the Product Manager opportunity. My background in technical product management and data analytics makes me well-suited for this role.",
+        matchScore: 92,
+      }
+    ];
+
+    setApplications(sampleApplications);
+    alert("Sample job posts and applications added successfully!");
   };
 
   // Load real data from localStorage
