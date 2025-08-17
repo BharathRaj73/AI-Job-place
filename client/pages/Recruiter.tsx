@@ -818,7 +818,7 @@ export default function Recruiter() {
                 {(() => {
                   const jobId = parseInt(activeTab.split("-")[1]);
                   const job = jobPosts.find((j) => j.id === jobId);
-                  const applications = mockApplications.filter(
+                  const jobApplications = applications.filter(
                     (app) => app.jobId === jobId,
                   );
 
