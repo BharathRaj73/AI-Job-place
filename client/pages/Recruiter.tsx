@@ -1005,7 +1005,7 @@ export default function Recruiter() {
                         <div className="text-center">
                           <p className="text-2xl font-bold text-green-600">
                             {jobPosts.reduce(
-                              (sum, job) => sum + job.applicants,
+                              (sum, job) => sum + (job.applicants || 0),
                               0,
                             )}
                           </p>
