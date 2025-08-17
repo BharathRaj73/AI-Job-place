@@ -86,8 +86,8 @@ export default function SignUp() {
       isAuthenticated: true,
       profileCompleted: false,
     };
-    
-    localStorage.setItem("user", JSON.stringify(userData));
+
+    login(userData);
     navigate("/profile");
   };
 
