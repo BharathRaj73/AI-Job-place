@@ -134,6 +134,52 @@ export default function Recruiter() {
   const [jobPosts, setJobPosts] = useState<any[]>([]);
   const [applications, setApplications] = useState<any[]>([]);
 
+  // Function to add sample job posts for testing
+  const addSampleJobPosts = () => {
+    const sampleJobs = [
+      {
+        id: Date.now(),
+        title: "Senior Frontend Developer",
+        company: "TechCorp Inc.",
+        location: "San Francisco, CA",
+        type: "Full-time",
+        salaryMin: "120000",
+        salaryMax: "160000",
+        description: "We're looking for an experienced frontend developer to join our team...",
+        requirements: "5+ years React experience, TypeScript, GraphQL",
+        benefits: "Health insurance, 401k, flexible hours",
+        skills: ["React", "TypeScript", "GraphQL"],
+        postedAt: new Date().toISOString(),
+        status: "active",
+        applicants: 12,
+        views: 143,
+        interested: 28,
+      },
+      {
+        id: Date.now() + 1,
+        title: "Product Manager",
+        company: "Innovation Labs",
+        location: "Remote",
+        type: "Full-time",
+        salaryMin: "100000",
+        salaryMax: "140000",
+        description: "Join our product team to drive innovation and growth...",
+        requirements: "3+ years PM experience, Technical background",
+        benefits: "Remote work, equity, learning budget",
+        skills: ["Product Management", "Analytics", "Agile"],
+        postedAt: new Date().toISOString(),
+        status: "active",
+        applicants: 8,
+        views: 89,
+        interested: 15,
+      }
+    ];
+
+    localStorage.setItem("jobPosts", JSON.stringify(sampleJobs));
+    setJobPosts(sampleJobs);
+    alert("Sample job posts added successfully!");
+  };
+
   // Load real data from localStorage
   useEffect(() => {
     // Load recruiter profile
