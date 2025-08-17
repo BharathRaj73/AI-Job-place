@@ -300,12 +300,23 @@ export default function JobSeekerDashboard() {
   };
 
   const handleWithdrawApplication = (jobId: number) => {
+    const job = getJobById(jobId);
+    if (!job) return;
+
+    // Confirm withdrawal
+    if (!confirm(`Are you sure you want to withdraw your application for ${job.title} at ${job.company}?`)) {
+      return;
+    }
+
     // Remove application from localStorage
     const updatedApplications = applications.filter(
       (app) => app.jobId !== jobId,
     );
     setApplications(updatedApplications);
     localStorage.setItem("applications", JSON.stringify(updatedApplications));
+
+    // Add notification
+    addNotification(`Withdrew application for ${job.title} at ${job.company}`, "general");
   };
 
   const handleProfileChange = (field: string, value: string) => {
