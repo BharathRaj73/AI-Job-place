@@ -978,6 +978,12 @@ export default function Recruiter() {
                               <div className="flex items-start justify-between">
                                 <div className="flex-1">
                                   <div className="flex items-center gap-3 mb-3">
+                                    <input
+                                      type="checkbox"
+                                      checked={selectedApplications.includes(application.id)}
+                                      onChange={() => toggleApplicationSelection(application.id)}
+                                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                                    />
                                     <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
                                       <User className="w-6 h-6 text-blue-600" />
                                     </div>
