@@ -19,24 +19,22 @@ export default function Login() {
     setIsLoading(true)
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000))
+
       if (email && password) {
-        // Simulate user authentication
-        const userData = {
-          id: Date.now(),
-          firstName: "John",
-          lastName: "Doe",
-          email: email,
-          userType: "job_seeker",
-          isAuthenticated: true,
-          profileCompleted: true, // Existing user has completed profile
-          skills: ["React", "TypeScript", "Node.js"], // Example skills for existing user
+        // Check against stored users
+        const existingUsers = JSON.parse(localStorage.getItem("users") || "[]")
+        const foundUser = existingUsers.find(
+          (user: any) => user.email === email && user.password === password
+        )
+
+        if (foundUser) {
+          // User found, log them in
+          const { password: _, ...userWithoutPassword } = foundUser // Remove password from user object
+          login(userWithoutPassword)
+          navigate("/profile")
+        } else {
+          alert("Invalid email or password. Please check your credentials.")
         }
-
-        login(userData)
-
-        // If user has completed profile, go to profile page to view/edit
-        // If not completed, go to profile page to complete
-        navigate("/profile")
       } else {
         alert("Please enter valid credentials")
       }
