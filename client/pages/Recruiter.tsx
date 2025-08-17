@@ -521,7 +521,7 @@ export default function Recruiter() {
                 </div>
 
                 <div className="grid gap-4">
-                  {mockJobPosts.map((job) => (
+                  {jobPosts.map((job) => (
                     <Card
                       key={job.id}
                       className="hover:shadow-md transition-shadow"
