@@ -702,7 +702,11 @@ export default function JobSeekerDashboard() {
                   </Button>
                 </div>
 
-                {mockJobs.map((job) => (
+                {mockJobs.map((job) => {
+                  const hasApplied = applications.some(app => app.jobId === job.id);
+                  const isSaved = savedJobs.includes(job.id);
+
+                  return (
                   <Card
                     key={job.id}
                     className="hover:shadow-md transition-shadow"
@@ -733,13 +737,21 @@ export default function JobSeekerDashboard() {
                                 >
                                   {job.matchScore}% match
                                 </Badge>
+                                {hasApplied && (
+                                  <Badge
+                                    variant="default"
+                                    className="bg-blue-100 text-blue-700"
+                                  >
+                                    Applied
+                                  </Badge>
+                                )}
                                 <Button
                                   variant="ghost"
                                   size="sm"
                                   onClick={() => handleSaveJob(job.id)}
                                 >
                                   <Bookmark
-                                    className={`w-4 h-4 ${savedJobs.includes(job.id) ? "fill-current text-primary" : ""}`}
+                                    className={`w-4 h-4 ${isSaved ? "fill-current text-primary" : ""}`}
                                   />
                                 </Button>
                               </div>
@@ -790,15 +802,15 @@ export default function JobSeekerDashboard() {
                                   size="sm"
                                   onClick={() => handleSaveJob(job.id)}
                                 >
-                                  {savedJobs.includes(job.id)
-                                    ? "Saved"
-                                    : "Save"}
+                                  {isSaved ? "Saved" : "Save"}
                                 </Button>
                                 <Button
                                   size="sm"
                                   onClick={() => handleApplyNow(job.id)}
+                                  disabled={hasApplied}
+                                  className={hasApplied ? "opacity-50 cursor-not-allowed" : ""}
                                 >
-                                  Apply Now
+                                  {hasApplied ? "Applied" : "Apply Now"}
                                 </Button>
                               </div>
                             </div>
@@ -807,7 +819,7 @@ export default function JobSeekerDashboard() {
                       </div>
                     </CardContent>
                   </Card>
-                ))}
+                );})}
               </div>
             </div>
           )}
