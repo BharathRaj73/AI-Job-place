@@ -134,6 +134,24 @@ export default function Recruiter() {
   const [jobPosts, setJobPosts] = useState<any[]>([]);
   const [applications, setApplications] = useState<any[]>([]);
 
+  // Function to delete an application
+  const handleDeleteApplication = (applicationId: number) => {
+    if (confirm("Are you sure you want to delete this application? This action cannot be undone.")) {
+      const updatedApplications = applications.filter(app => app.id !== applicationId);
+      setApplications(updatedApplications);
+      alert("Application deleted successfully!");
+    }
+  };
+
+  // Function to update application status
+  const handleUpdateApplicationStatus = (applicationId: number, newStatus: string) => {
+    const updatedApplications = applications.map(app =>
+      app.id === applicationId ? { ...app, status: newStatus } : app
+    );
+    setApplications(updatedApplications);
+    alert(`Application status updated to ${newStatus}!`);
+  };
+
   // Function to add sample job posts for testing
   const addSampleJobPosts = () => {
     const sampleJobs = [
