@@ -29,6 +29,7 @@ export default function Login() {
           userType: "job_seeker",
           isAuthenticated: true,
           profileCompleted: true, // Existing user has completed profile
+          skills: ["React", "TypeScript", "Node.js"], // Example skills for existing user
         }
 
         login(userData)
