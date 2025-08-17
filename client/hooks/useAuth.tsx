@@ -8,7 +8,13 @@ interface User {
   userType: string;
   isAuthenticated: boolean;
   profileCompleted: boolean;
-  skills?: string[]; // Optional skills array
+  skills?: string[];
+  phone?: string;
+  location?: string;
+  title?: string;
+  summary?: string;
+  experience?: string;
+  education?: string;
 }
 
 interface AuthContextType {
