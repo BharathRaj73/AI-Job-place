@@ -830,7 +830,7 @@ export default function Recruiter() {
                             Applications for {job?.title}
                           </h2>
                           <p className="text-slate-600">
-                            {applications.length} candidates have applied
+                            {jobApplications.length} candidates have applied
                           </p>
                         </div>
                         <Button
