@@ -9,6 +9,7 @@ import { Brain, Mail, Lock, User, ArrowLeft } from "lucide-react";
 
 export default function SignUp() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
