@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -28,6 +29,7 @@ import {
 
 export default function JobSeekerDashboard() {
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("feed");
   const [savedJobs, setSavedJobs] = useState<number[]>([]);
@@ -37,23 +39,23 @@ export default function JobSeekerDashboard() {
   const [notifications, setNotifications] = useState<any[]>([]);
   const [profileViews, setProfileViews] = useState(0);
   const [profile, setProfile] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
+    firstName: user?.firstName || "",
+    lastName: user?.lastName || "",
+    email: user?.email || "",
+    phone: user?.phone || "",
     address: "",
     city: "",
     state: "",
     zipCode: "",
-    jobTitle: "",
-    experience: "",
-    skills: ["React", "TypeScript", "Node.js", "Python", "AWS"],
+    jobTitle: user?.title || "",
+    experience: user?.experience || "",
+    skills: user?.skills || ["React", "TypeScript", "Node.js", "Python", "AWS"],
     coverLetter: "",
     linkedin: "",
     portfolio: "",
     jobType: "Full-time",
     salaryRange: "",
-    preferredLocation: "",
+    preferredLocation: user?.location || "",
     noticePeriod: "2 weeks",
     profilePhoto: "",
     resume: "",
@@ -172,8 +174,36 @@ export default function JobSeekerDashboard() {
     { id: "analytics", label: "Analytics", icon: BarChart3 },
   ];
 
-  // Load saved jobs, applications, profile and notifications from localStorage on component mount
+  // Function to add sample data for testing
+  const addSampleData = () => {
+    // Add sample saved jobs
+    const sampleSavedJobs = [2]; // Save "Full Stack Engineer" job
+    setSavedJobs(sampleSavedJobs);
+    localStorage.setItem("savedJobs", JSON.stringify(sampleSavedJobs));
+
+    // Add sample applications
+    const sampleApplications = [
+      {
+        jobId: 1,
+        appliedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
+        status: "Under Review"
+      }
+    ];
+    setApplications(sampleApplications);
+    localStorage.setItem("applications", JSON.stringify(sampleApplications));
+
+    addNotification("Sample data added - check out your saved jobs and applications!", "general");
+  };
+
+  // Check authentication and load data
   useEffect(() => {
+    // Redirect to login if not authenticated
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
+    // Load saved jobs, applications, and notifications from localStorage
     const saved = JSON.parse(localStorage.getItem("savedJobs") || "[]");
     setSavedJobs(saved);
 
@@ -183,9 +213,20 @@ export default function JobSeekerDashboard() {
     const savedProfile = JSON.parse(
       localStorage.getItem("userProfile") || "{}",
     );
-    if (Object.keys(savedProfile).length > 0) {
-      setProfile({ ...profile, ...savedProfile });
-    }
+
+    // Merge user data with saved profile data, prioritizing user data for name/email
+    setProfile(prev => ({
+      ...prev,
+      ...savedProfile,
+      firstName: user.firstName || savedProfile.firstName || "",
+      lastName: user.lastName || savedProfile.lastName || "",
+      email: user.email || savedProfile.email || "",
+      phone: user.phone || savedProfile.phone || "",
+      jobTitle: user.title || savedProfile.jobTitle || "",
+      experience: user.experience || savedProfile.experience || "",
+      skills: user.skills || savedProfile.skills || ["React", "TypeScript", "Node.js"],
+      preferredLocation: user.location || savedProfile.preferredLocation || "",
+    }));
 
     const savedNotifications = JSON.parse(
       localStorage.getItem("notifications") || "[]",
@@ -194,26 +235,62 @@ export default function JobSeekerDashboard() {
 
     const views = JSON.parse(localStorage.getItem("profileViews") || "0");
     setProfileViews(views);
-  }, []);
+  }, [user, navigate]);
 
   const handleSaveJob = (jobId: number) => {
+    const job = getJobById(jobId);
+    if (!job) return;
+
     let updatedSavedJobs;
+    let message;
+
     if (savedJobs.includes(jobId)) {
       // Remove from saved jobs
       updatedSavedJobs = savedJobs.filter((id) => id !== jobId);
+      message = `Removed ${job.title} from saved jobs`;
     } else {
       // Add to saved jobs
       updatedSavedJobs = [...savedJobs, jobId];
+      message = `Saved ${job.title} to your saved jobs`;
     }
 
     setSavedJobs(updatedSavedJobs);
     localStorage.setItem("savedJobs", JSON.stringify(updatedSavedJobs));
+
+    // Add notification
+    addNotification(message, "general");
   };
 
   const handleApplyNow = (jobId: number) => {
+    const job = getJobById(jobId);
+    if (!job) return;
+
+    // Check if already applied
+    const alreadyApplied = applications.some(app => app.jobId === jobId);
+    if (alreadyApplied) {
+      alert("You have already applied to this job!");
+      return;
+    }
+
+    // Add to applications
+    const newApplication = {
+      jobId: jobId,
+      appliedAt: new Date().toISOString(),
+      status: "Pending"
+    };
+
+    const updatedApplications = [...applications, newApplication];
+    setApplications(updatedApplications);
+    localStorage.setItem("applications", JSON.stringify(updatedApplications));
+
+    // Add notification
+    addNotification(`Application submitted for ${job.title} at ${job.company}`, "application");
+
     // Simulate recruiter viewing profile when user applies
     incrementProfileViews();
-    navigate(`/job/${jobId}`);
+
+    // Show success message
+    alert(`Successfully applied to ${job.title} at ${job.company}!`);
   };
 
   // Function to be called after successful job application
@@ -244,12 +321,23 @@ export default function JobSeekerDashboard() {
   };
 
   const handleWithdrawApplication = (jobId: number) => {
+    const job = getJobById(jobId);
+    if (!job) return;
+
+    // Confirm withdrawal
+    if (!confirm(`Are you sure you want to withdraw your application for ${job.title} at ${job.company}?`)) {
+      return;
+    }
+
     // Remove application from localStorage
     const updatedApplications = applications.filter(
       (app) => app.jobId !== jobId,
     );
     setApplications(updatedApplications);
     localStorage.setItem("applications", JSON.stringify(updatedApplications));
+
+    // Add notification
+    addNotification(`Withdrew application for ${job.title} at ${job.company}`, "general");
   };
 
   const handleProfileChange = (field: string, value: string) => {
@@ -499,7 +587,10 @@ export default function JobSeekerDashboard() {
               </AvatarFallback>
             </Avatar>
 
-            <Button variant="ghost" size="sm" onClick={() => navigate("/")}>
+            <Button variant="ghost" size="sm" onClick={() => {
+              logout();
+              navigate("/");
+            }}>
               <LogOut className="w-4 h-4" />
             </Button>
           </div>
@@ -530,6 +621,79 @@ export default function JobSeekerDashboard() {
         <main className="flex-1 p-6">
           {activeTab === "feed" && (
             <div className="space-y-6">
+              {/* Profile Summary Card */}
+              <Card className="border-blue-200 bg-blue-50/50">
+                <CardContent className="p-6">
+                  <div className="flex items-start justify-between">
+                    <div className="flex gap-4">
+                      <Avatar className="w-16 h-16">
+                        <AvatarImage src={profile.profilePhoto} />
+                        <AvatarFallback className="text-lg bg-blue-100 text-blue-700">
+                          {profile.firstName?.charAt(0) || "J"}
+                          {profile.lastName?.charAt(0) || "S"}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold text-foreground">
+                          Welcome back, {profile.firstName || "Job Seeker"}!
+                        </h3>
+                        <p className="text-sm text-muted-foreground mb-2">
+                          {profile.email}
+                        </p>
+                        {profile.jobTitle && (
+                          <p className="text-sm text-blue-700 font-medium">
+                            {profile.jobTitle}
+                          </p>
+                        )}
+
+                        {/* Missing information alerts */}
+                        <div className="mt-3 space-y-1">
+                          {!profile.jobTitle && (
+                            <p className="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded inline-block mr-2">
+                              Add job title to improve matches
+                            </p>
+                          )}
+                          {!profile.phone && (
+                            <p className="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded inline-block mr-2">
+                              Add phone number
+                            </p>
+                          )}
+                          {profile.skills.length === 0 && (
+                            <p className="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded inline-block mr-2">
+                              Add skills to get better job matches
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-right space-y-2">
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setActiveTab("profile")}
+                        >
+                          Complete Profile
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={addSampleData}
+                          className="text-xs"
+                        >
+                          Add Sample Data
+                        </Button>
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        Profile {Math.floor((
+                          [profile.firstName, profile.lastName, profile.email, profile.jobTitle, profile.phone].filter(Boolean).length / 5
+                        ) * 100)}% complete
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
               {/* Stats Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {stats.map((stat, index) => (
@@ -568,7 +732,11 @@ export default function JobSeekerDashboard() {
                   </Button>
                 </div>
 
-                {mockJobs.map((job) => (
+                {mockJobs.map((job) => {
+                  const hasApplied = applications.some(app => app.jobId === job.id);
+                  const isSaved = savedJobs.includes(job.id);
+
+                  return (
                   <Card
                     key={job.id}
                     className="hover:shadow-md transition-shadow"
@@ -599,13 +767,21 @@ export default function JobSeekerDashboard() {
                                 >
                                   {job.matchScore}% match
                                 </Badge>
+                                {hasApplied && (
+                                  <Badge
+                                    variant="default"
+                                    className="bg-blue-100 text-blue-700"
+                                  >
+                                    Applied
+                                  </Badge>
+                                )}
                                 <Button
                                   variant="ghost"
                                   size="sm"
                                   onClick={() => handleSaveJob(job.id)}
                                 >
                                   <Bookmark
-                                    className={`w-4 h-4 ${savedJobs.includes(job.id) ? "fill-current text-primary" : ""}`}
+                                    className={`w-4 h-4 ${isSaved ? "fill-current text-primary" : ""}`}
                                   />
                                 </Button>
                               </div>
@@ -656,15 +832,15 @@ export default function JobSeekerDashboard() {
                                   size="sm"
                                   onClick={() => handleSaveJob(job.id)}
                                 >
-                                  {savedJobs.includes(job.id)
-                                    ? "Saved"
-                                    : "Save"}
+                                  {isSaved ? "Saved" : "Save"}
                                 </Button>
                                 <Button
                                   size="sm"
                                   onClick={() => handleApplyNow(job.id)}
+                                  disabled={hasApplied}
+                                  className={hasApplied ? "opacity-50 cursor-not-allowed" : ""}
                                 >
-                                  Apply Now
+                                  {hasApplied ? "Applied" : "Apply Now"}
                                 </Button>
                               </div>
                             </div>
@@ -673,7 +849,7 @@ export default function JobSeekerDashboard() {
                       </div>
                     </CardContent>
                   </Card>
-                ))}
+                );})}
               </div>
             </div>
           )}

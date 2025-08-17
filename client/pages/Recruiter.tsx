@@ -133,6 +133,156 @@ export default function Recruiter() {
 
   const [jobPosts, setJobPosts] = useState<any[]>([]);
   const [applications, setApplications] = useState<any[]>([]);
+  const [selectedApplications, setSelectedApplications] = useState<number[]>([]);
+
+  // Function to delete an application
+  const handleDeleteApplication = (applicationId: number) => {
+    if (confirm("Are you sure you want to delete this application? This action cannot be undone.")) {
+      const updatedApplications = applications.filter(app => app.id !== applicationId);
+      setApplications(updatedApplications);
+      alert("Application deleted successfully!");
+    }
+  };
+
+  // Function to update application status
+  const handleUpdateApplicationStatus = (applicationId: number, newStatus: string) => {
+    const updatedApplications = applications.map(app =>
+      app.id === applicationId ? { ...app, status: newStatus } : app
+    );
+    setApplications(updatedApplications);
+    alert(`Application status updated to ${newStatus}!`);
+  };
+
+  // Function to bulk delete applications for a job
+  const handleBulkDeleteApplications = (jobId: number) => {
+    if (confirm("Are you sure you want to delete ALL applications for this job? This action cannot be undone.")) {
+      const updatedApplications = applications.filter(app => app.jobId !== jobId);
+      setApplications(updatedApplications);
+      setSelectedApplications([]);
+      alert("All applications for this job have been deleted!");
+    }
+  };
+
+  // Function to toggle application selection
+  const toggleApplicationSelection = (applicationId: number) => {
+    setSelectedApplications(prev =>
+      prev.includes(applicationId)
+        ? prev.filter(id => id !== applicationId)
+        : [...prev, applicationId]
+    );
+  };
+
+  // Function to delete selected applications
+  const handleDeleteSelectedApplications = () => {
+    if (selectedApplications.length === 0) {
+      alert("Please select applications to delete.");
+      return;
+    }
+
+    if (confirm(`Are you sure you want to delete ${selectedApplications.length} selected applications? This action cannot be undone.`)) {
+      const updatedApplications = applications.filter(app => !selectedApplications.includes(app.id));
+      setApplications(updatedApplications);
+      setSelectedApplications([]);
+      alert(`${selectedApplications.length} applications deleted successfully!`);
+    }
+  };
+
+  // Function to add sample job posts for testing
+  const addSampleJobPosts = () => {
+    const sampleJobs = [
+      {
+        id: Date.now(),
+        title: "Senior Frontend Developer",
+        company: "TechCorp Inc.",
+        location: "San Francisco, CA",
+        type: "Full-time",
+        salaryMin: "120000",
+        salaryMax: "160000",
+        description: "We're looking for an experienced frontend developer to join our team...",
+        requirements: "5+ years React experience, TypeScript, GraphQL",
+        benefits: "Health insurance, 401k, flexible hours",
+        skills: ["React", "TypeScript", "GraphQL"],
+        postedAt: new Date().toISOString(),
+        status: "active",
+        applicants: 12,
+        views: 143,
+        interested: 28,
+      },
+      {
+        id: Date.now() + 1,
+        title: "Product Manager",
+        company: "Innovation Labs",
+        location: "Remote",
+        type: "Full-time",
+        salaryMin: "100000",
+        salaryMax: "140000",
+        description: "Join our product team to drive innovation and growth...",
+        requirements: "3+ years PM experience, Technical background",
+        benefits: "Remote work, equity, learning budget",
+        skills: ["Product Management", "Analytics", "Agile"],
+        postedAt: new Date().toISOString(),
+        status: "active",
+        applicants: 8,
+        views: 89,
+        interested: 15,
+      }
+    ];
+
+    localStorage.setItem("jobPosts", JSON.stringify(sampleJobs));
+    setJobPosts(sampleJobs);
+
+    // Add sample applications for the job posts
+    const sampleApplications = [
+      {
+        id: 1,
+        jobId: sampleJobs[0].id, // For Senior Frontend Developer
+        jobTitle: sampleJobs[0].title,
+        candidateName: "Alex Johnson",
+        candidateEmail: "alex.johnson@email.com",
+        candidatePhone: "+1 (555) 987-6543",
+        experience: "5 years",
+        skills: ["React", "TypeScript", "Node.js"],
+        appliedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
+        status: "pending",
+        resumeUrl: "#",
+        coverLetter: "I am excited to apply for this Senior Frontend Developer position. With 5 years of experience in React and TypeScript, I believe I would be a great fit for your team.",
+        matchScore: 95,
+      },
+      {
+        id: 2,
+        jobId: sampleJobs[0].id, // For Senior Frontend Developer
+        jobTitle: sampleJobs[0].title,
+        candidateName: "Sarah Chen",
+        candidateEmail: "sarah.chen@email.com",
+        candidatePhone: "+1 (555) 123-7890",
+        experience: "6 years",
+        skills: ["React", "GraphQL", "AWS"],
+        appliedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
+        status: "reviewing",
+        resumeUrl: "#",
+        coverLetter: "Hello! I'm very interested in the Senior Frontend Developer role. My experience includes building scalable React applications with GraphQL and AWS integration.",
+        matchScore: 88,
+      },
+      {
+        id: 3,
+        jobId: sampleJobs[1].id, // For Product Manager
+        jobTitle: sampleJobs[1].title,
+        candidateName: "Mike Rodriguez",
+        candidateEmail: "mike.rodriguez@email.com",
+        candidatePhone: "+1 (555) 456-1234",
+        experience: "4 years",
+        skills: ["Product Management", "Analytics", "Agile", "SQL"],
+        appliedAt: new Date().toISOString(), // Today
+        status: "pending",
+        resumeUrl: "#",
+        coverLetter: "I'm excited about the Product Manager opportunity. My background in technical product management and data analytics makes me well-suited for this role.",
+        matchScore: 92,
+      }
+    ];
+
+    setApplications(sampleApplications);
+    alert("Sample job posts and applications added successfully!");
+  };
 
   // Load real data from localStorage
   useEffect(() => {
@@ -514,14 +664,23 @@ export default function Recruiter() {
                   <h2 className="text-2xl font-bold text-slate-900">
                     My Job Posts
                   </h2>
-                  <Button onClick={() => setActiveTab("post-job")}>
-                    <Plus className="w-4 h-4 mr-2" />
-                    Post New Job
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      onClick={addSampleJobPosts}
+                      className="text-sm"
+                    >
+                      Add Sample Data
+                    </Button>
+                    <Button onClick={() => setActiveTab("post-job")}>
+                      <Plus className="w-4 h-4 mr-2" />
+                      Post New Job
+                    </Button>
+                  </div>
                 </div>
 
                 <div className="grid gap-4">
-                  {mockJobPosts.map((job) => (
+                  {jobPosts.map((job) => (
                     <Card
                       key={job.id}
                       className="hover:shadow-md transition-shadow"
@@ -582,7 +741,7 @@ export default function Recruiter() {
                             >
                               View Applications (
                               {
-                                mockApplications.filter(
+                                applications.filter(
                                   (app) => app.jobId === job.id,
                                 ).length
                               }
@@ -762,8 +921,8 @@ export default function Recruiter() {
               <div className="space-y-6">
                 {(() => {
                   const jobId = parseInt(activeTab.split("-")[1]);
-                  const job = mockJobPosts.find((j) => j.id === jobId);
-                  const applications = mockApplications.filter(
+                  const job = jobPosts.find((j) => j.id === jobId);
+                  const jobApplications = applications.filter(
                     (app) => app.jobId === jobId,
                   );
 
@@ -775,19 +934,51 @@ export default function Recruiter() {
                             Applications for {job?.title}
                           </h2>
                           <p className="text-slate-600">
-                            {applications.length} candidates have applied
+                            {jobApplications.length} candidates have applied
                           </p>
                         </div>
-                        <Button
-                          variant="outline"
-                          onClick={() => setActiveTab("dashboard")}
-                        >
-                          Back to Jobs
-                        </Button>
+                        <div className="flex gap-2">
+                          {selectedApplications.length > 0 && (
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={handleDeleteSelectedApplications}
+                            >
+                              Delete Selected ({selectedApplications.length})
+                            </Button>
+                          )}
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleBulkDeleteApplications(jobId)}
+                            className="text-destructive hover:text-destructive"
+                          >
+                            Delete All
+                          </Button>
+                          <Button
+                            variant="outline"
+                            onClick={() => setActiveTab("dashboard")}
+                          >
+                            Back to Jobs
+                          </Button>
+                        </div>
                       </div>
 
                       <div className="grid gap-4">
-                        {applications.map((application) => (
+                        {jobApplications.length === 0 ? (
+                          <Card>
+                            <CardContent className="p-12 text-center">
+                              <User className="w-12 h-12 text-slate-400 mx-auto mb-4" />
+                              <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                                No Applications Yet
+                              </h3>
+                              <p className="text-slate-600">
+                                This job posting hasn't received any applications yet.
+                              </p>
+                            </CardContent>
+                          </Card>
+                        ) : (
+                          jobApplications.map((application) => (
                           <Card
                             key={application.id}
                             className="hover:shadow-md transition-shadow"
@@ -796,6 +987,12 @@ export default function Recruiter() {
                               <div className="flex items-start justify-between">
                                 <div className="flex-1">
                                   <div className="flex items-center gap-3 mb-3">
+                                    <input
+                                      type="checkbox"
+                                      checked={selectedApplications.includes(application.id)}
+                                      onChange={() => toggleApplicationSelection(application.id)}
+                                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                                    />
                                     <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
                                       <User className="w-6 h-6 text-blue-600" />
                                     </div>
@@ -878,7 +1075,7 @@ export default function Recruiter() {
                                       </Badge>
                                     </div>
 
-                                    <div className="flex gap-2">
+                                    <div className="flex gap-2 flex-wrap">
                                       <Button variant="outline" size="sm">
                                         <Download className="w-4 h-4 mr-1" />
                                         Resume
@@ -886,14 +1083,35 @@ export default function Recruiter() {
                                       <Button variant="outline" size="sm">
                                         Message
                                       </Button>
-                                      <Button size="sm">Review</Button>
+
+                                      {/* Status Change Dropdown */}
+                                      <select
+                                        value={application.status}
+                                        onChange={(e) => handleUpdateApplicationStatus(application.id, e.target.value)}
+                                        className="px-3 py-1 text-sm border border-gray-300 rounded-md bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                      >
+                                        <option value="pending">Pending</option>
+                                        <option value="reviewing">Reviewing</option>
+                                        <option value="interviewed">Interviewed</option>
+                                        <option value="accepted">Accepted</option>
+                                        <option value="rejected">Rejected</option>
+                                      </select>
+
+                                      <Button
+                                        size="sm"
+                                        variant="destructive"
+                                        onClick={() => handleDeleteApplication(application.id)}
+                                      >
+                                        Delete
+                                      </Button>
                                     </div>
                                   </div>
                                 </div>
                               </div>
                             </CardContent>
                           </Card>
-                        ))}
+                          ))
+                        )}
                       </div>
                     </>
                   );
@@ -995,7 +1213,7 @@ export default function Recruiter() {
                       <CardContent className="space-y-4">
                         <div className="text-center">
                           <p className="text-2xl font-bold text-blue-600">
-                            {mockJobPosts.length}
+                            {jobPosts.length}
                           </p>
                           <p className="text-sm text-slate-600">
                             Active Job Posts
@@ -1004,8 +1222,8 @@ export default function Recruiter() {
                         <Separator />
                         <div className="text-center">
                           <p className="text-2xl font-bold text-green-600">
-                            {mockJobPosts.reduce(
-                              (sum, job) => sum + job.applicants,
+                            {jobPosts.reduce(
+                              (sum, job) => sum + (job.applicants || 0),
                               0,
                             )}
                           </p>
@@ -1016,8 +1234,8 @@ export default function Recruiter() {
                         <Separator />
                         <div className="text-center">
                           <p className="text-2xl font-bold text-purple-600">
-                            {mockJobPosts.reduce(
-                              (sum, job) => sum + job.interested,
+                            {jobPosts.reduce(
+                              (sum, job) => sum + (job.interested || 0),
                               0,
                             )}
                           </p>

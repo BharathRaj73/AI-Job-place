@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Brain, Users, Search } from "lucide-react";
@@ -9,6 +10,7 @@ type UserType = "job_seeker" | "recruiter" | null;
 
 export default function Onboarding() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [selectedType, setSelectedType] = useState<UserType>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -22,11 +24,8 @@ export default function Onboarding() {
     setError("");
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      if (selectedType === "job_seeker") {
-        navigate("/dashboard/job-seeker");
-      } else {
-        navigate("/dashboard/recruiter");
-      }
+      // Both user types go to signup with their selected type
+      navigate("/signup", { state: { userType: selectedType } });
     } catch {
       setError("Onboarding failed. Please try again.");
     } finally {
@@ -132,7 +131,15 @@ export default function Onboarding() {
           <div className="text-center">
             <Button
               variant="link"
-              onClick={() => navigate("/login")}
+              onClick={() => {
+                // If user exists and is authenticated, go to profile page
+                // Otherwise, go to login page
+                if (user?.isAuthenticated) {
+                  navigate("/profile");
+                } else {
+                  navigate("/login");
+                }
+              }}
               className="text-gray-500 hover:text-gray-800"
             >
               Back to sign in

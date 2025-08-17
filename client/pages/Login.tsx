@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { useAuth } from "@/hooks/useAuth"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -8,17 +9,32 @@ import { Brain, Mail, Lock, ArrowLeft } from "lucide-react"
 
 export default function Login() {
   const navigate = useNavigate()
+  const { login } = useAuth()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleSignIn = async (e) => {
+  const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000))
+
       if (email && password) {
-        navigate("/dashboard/job-seeker")
+        // Check against stored users
+        const existingUsers = JSON.parse(localStorage.getItem("users") || "[]")
+        const foundUser = existingUsers.find(
+          (user: any) => user.email === email && user.password === password
+        )
+
+        if (foundUser) {
+          // User found, log them in
+          const { password: _, ...userWithoutPassword } = foundUser // Remove password from user object
+          login(userWithoutPassword)
+          navigate("/profile")
+        } else {
+          alert("Invalid email or password. Please check your credentials.")
+        }
       } else {
         alert("Please enter valid credentials")
       }
@@ -30,7 +46,23 @@ export default function Login() {
   }
 
   const handleGoogleSignIn = () => {
-    navigate("/dashboard/job-seeker")
+    const googleEmail = "john.doe@gmail.com"
+
+    // Check if Google user already exists
+    const existingUsers = JSON.parse(localStorage.getItem("users") || "[]")
+    const foundUser = existingUsers.find((user: any) => user.email === googleEmail)
+
+    if (foundUser) {
+      // Existing Google user
+      const { password: _, ...userWithoutPassword } = foundUser
+      login(userWithoutPassword)
+    } else {
+      // New Google user - redirect to onboarding to select user type
+      navigate("/onboarding")
+      return
+    }
+
+    navigate("/profile")
   }
 
   return (
