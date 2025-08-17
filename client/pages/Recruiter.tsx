@@ -1016,7 +1016,7 @@ export default function Recruiter() {
                         <Separator />
                         <div className="text-center">
                           <p className="text-2xl font-bold text-purple-600">
-                            {mockJobPosts.reduce(
+                            {jobPosts.reduce(
                               (sum, job) => sum + job.interested,
                               0,
                             )}
