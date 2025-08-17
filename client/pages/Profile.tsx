@@ -64,16 +64,14 @@ export default function Profile() {
   });
 
   useEffect(() => {
-    // Load user data from localStorage
-    const userData = localStorage.getItem("user");
-    if (userData) {
-      const user = JSON.parse(userData);
+    // Load user data from auth context
+    if (user) {
       setProfile(user);
     } else {
       // If no user data, redirect to login
       navigate("/login");
     }
-  }, [navigate]);
+  }, [user, navigate]);
 
   const handleInputChange = (field: keyof UserProfile, value: string) => {
     setProfile((prev) => ({ ...prev, [field]: value }));
