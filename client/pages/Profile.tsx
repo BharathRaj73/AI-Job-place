@@ -42,6 +42,7 @@ interface UserProfile {
 
 export default function Profile() {
   const navigate = useNavigate();
+  const { user, logout, updateUser } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [skillInput, setSkillInput] = useState("");
