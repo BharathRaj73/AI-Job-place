@@ -53,7 +53,7 @@ export default function SignUp() {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1500));
       
-      // Store user data in localStorage for now (in real app, this would be handled by backend)
+      // Create user data and login (in real app, this would be handled by backend)
       const userData = {
         id: Date.now(),
         firstName: formData.firstName,
@@ -63,8 +63,8 @@ export default function SignUp() {
         isAuthenticated: true,
         profileCompleted: false,
       };
-      
-      localStorage.setItem("user", JSON.stringify(userData));
+
+      login(userData);
       
       // Navigate to profile page to complete setup
       navigate("/profile");
