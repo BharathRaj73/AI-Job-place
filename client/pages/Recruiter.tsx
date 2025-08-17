@@ -762,7 +762,7 @@ export default function Recruiter() {
               <div className="space-y-6">
                 {(() => {
                   const jobId = parseInt(activeTab.split("-")[1]);
-                  const job = mockJobPosts.find((j) => j.id === jobId);
+                  const job = jobPosts.find((j) => j.id === jobId);
                   const applications = mockApplications.filter(
                     (app) => app.jobId === jobId,
                   );
