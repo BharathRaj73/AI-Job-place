@@ -560,10 +560,19 @@ export default function Recruiter() {
                   <h2 className="text-2xl font-bold text-slate-900">
                     My Job Posts
                   </h2>
-                  <Button onClick={() => setActiveTab("post-job")}>
-                    <Plus className="w-4 h-4 mr-2" />
-                    Post New Job
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      onClick={addSampleJobPosts}
+                      className="text-sm"
+                    >
+                      Add Sample Data
+                    </Button>
+                    <Button onClick={() => setActiveTab("post-job")}>
+                      <Plus className="w-4 h-4 mr-2" />
+                      Post New Job
+                    </Button>
+                  </div>
                 </div>
 
                 <div className="grid gap-4">
