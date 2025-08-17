@@ -29,6 +29,7 @@ import {
 
 export default function JobSeekerDashboard() {
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("feed");
   const [savedJobs, setSavedJobs] = useState<number[]>([]);
@@ -38,23 +39,23 @@ export default function JobSeekerDashboard() {
   const [notifications, setNotifications] = useState<any[]>([]);
   const [profileViews, setProfileViews] = useState(0);
   const [profile, setProfile] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
+    firstName: user?.firstName || "",
+    lastName: user?.lastName || "",
+    email: user?.email || "",
+    phone: user?.phone || "",
     address: "",
     city: "",
     state: "",
     zipCode: "",
-    jobTitle: "",
-    experience: "",
-    skills: ["React", "TypeScript", "Node.js", "Python", "AWS"],
+    jobTitle: user?.title || "",
+    experience: user?.experience || "",
+    skills: user?.skills || ["React", "TypeScript", "Node.js", "Python", "AWS"],
     coverLetter: "",
     linkedin: "",
     portfolio: "",
     jobType: "Full-time",
     salaryRange: "",
-    preferredLocation: "",
+    preferredLocation: user?.location || "",
     noticePeriod: "2 weeks",
     profilePhoto: "",
     resume: "",
