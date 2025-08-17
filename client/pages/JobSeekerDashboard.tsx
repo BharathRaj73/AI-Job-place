@@ -217,17 +217,27 @@ export default function JobSeekerDashboard() {
   }, [user, navigate]);
 
   const handleSaveJob = (jobId: number) => {
+    const job = getJobById(jobId);
+    if (!job) return;
+
     let updatedSavedJobs;
+    let message;
+
     if (savedJobs.includes(jobId)) {
       // Remove from saved jobs
       updatedSavedJobs = savedJobs.filter((id) => id !== jobId);
+      message = `Removed ${job.title} from saved jobs`;
     } else {
       // Add to saved jobs
       updatedSavedJobs = [...savedJobs, jobId];
+      message = `Saved ${job.title} to your saved jobs`;
     }
 
     setSavedJobs(updatedSavedJobs);
     localStorage.setItem("savedJobs", JSON.stringify(updatedSavedJobs));
+
+    // Add notification
+    addNotification(message, "general");
   };
 
   const handleApplyNow = (jobId: number) => {
