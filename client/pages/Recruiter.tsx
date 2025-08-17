@@ -842,7 +842,20 @@ export default function Recruiter() {
                       </div>
 
                       <div className="grid gap-4">
-                        {jobApplications.map((application) => (
+                        {jobApplications.length === 0 ? (
+                          <Card>
+                            <CardContent className="p-12 text-center">
+                              <User className="w-12 h-12 text-slate-400 mx-auto mb-4" />
+                              <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                                No Applications Yet
+                              </h3>
+                              <p className="text-slate-600">
+                                This job posting hasn't received any applications yet.
+                              </p>
+                            </CardContent>
+                          </Card>
+                        ) : (
+                          jobApplications.map((application) => (
                           <Card
                             key={application.id}
                             className="hover:shadow-md transition-shadow"
@@ -948,7 +961,8 @@ export default function Recruiter() {
                               </div>
                             </CardContent>
                           </Card>
-                        ))}
+                          ))
+                        )}
                       </div>
                     </>
                   );
