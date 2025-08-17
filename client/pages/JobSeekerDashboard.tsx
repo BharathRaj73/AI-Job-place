@@ -174,6 +174,27 @@ export default function JobSeekerDashboard() {
     { id: "analytics", label: "Analytics", icon: BarChart3 },
   ];
 
+  // Function to add sample data for testing
+  const addSampleData = () => {
+    // Add sample saved jobs
+    const sampleSavedJobs = [2]; // Save "Full Stack Engineer" job
+    setSavedJobs(sampleSavedJobs);
+    localStorage.setItem("savedJobs", JSON.stringify(sampleSavedJobs));
+
+    // Add sample applications
+    const sampleApplications = [
+      {
+        jobId: 1,
+        appliedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
+        status: "Under Review"
+      }
+    ];
+    setApplications(sampleApplications);
+    localStorage.setItem("applications", JSON.stringify(sampleApplications));
+
+    addNotification("Sample data added - check out your saved jobs and applications!", "general");
+  };
+
   // Check authentication and load data
   useEffect(() => {
     // Redirect to login if not authenticated
