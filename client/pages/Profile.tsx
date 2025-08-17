@@ -67,8 +67,20 @@ export default function Profile() {
     // Load user data from auth context
     if (user) {
       setProfile({
-        ...user,
-        skills: user.skills || [], // Ensure skills is always an array
+        id: user.id || 0,
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        email: user.email || "",
+        phone: (user as any).phone || "",
+        location: (user as any).location || "",
+        title: (user as any).title || "",
+        summary: (user as any).summary || "",
+        experience: (user as any).experience || "",
+        education: (user as any).education || "",
+        skills: user.skills || [],
+        userType: user.userType || "job_seeker",
+        isAuthenticated: user.isAuthenticated || false,
+        profileCompleted: user.profileCompleted || false,
       });
     } else {
       // If no user data, redirect to login
