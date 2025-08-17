@@ -124,7 +124,7 @@ export default function Profile() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
+    logout();
     navigate("/");
   };
 
