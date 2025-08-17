@@ -842,7 +842,7 @@ export default function Recruiter() {
                       </div>
 
                       <div className="grid gap-4">
-                        {applications.map((application) => (
+                        {jobApplications.map((application) => (
                           <Card
                             key={application.id}
                             className="hover:shadow-md transition-shadow"
