@@ -110,9 +110,9 @@ export default function Profile() {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
       
-      // Update user data in localStorage
+      // Update user data via auth context
       const updatedProfile = { ...profile, profileCompleted: true };
-      localStorage.setItem("user", JSON.stringify(updatedProfile));
+      updateUser(updatedProfile);
       
       // Navigate to dashboard
       navigate("/dashboard/job-seeker");
