@@ -231,9 +231,35 @@ export default function JobSeekerDashboard() {
   };
 
   const handleApplyNow = (jobId: number) => {
+    const job = getJobById(jobId);
+    if (!job) return;
+
+    // Check if already applied
+    const alreadyApplied = applications.some(app => app.jobId === jobId);
+    if (alreadyApplied) {
+      alert("You have already applied to this job!");
+      return;
+    }
+
+    // Add to applications
+    const newApplication = {
+      jobId: jobId,
+      appliedAt: new Date().toISOString(),
+      status: "Pending"
+    };
+
+    const updatedApplications = [...applications, newApplication];
+    setApplications(updatedApplications);
+    localStorage.setItem("applications", JSON.stringify(updatedApplications));
+
+    // Add notification
+    addNotification(`Application submitted for ${job.title} at ${job.company}`, "application");
+
     // Simulate recruiter viewing profile when user applies
     incrementProfileViews();
-    navigate(`/job/${jobId}`);
+
+    // Show success message
+    alert(`Successfully applied to ${job.title} at ${job.company}!`);
   };
 
   // Function to be called after successful job application
