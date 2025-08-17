@@ -174,8 +174,15 @@ export default function JobSeekerDashboard() {
     { id: "analytics", label: "Analytics", icon: BarChart3 },
   ];
 
-  // Load saved jobs, applications, profile and notifications from localStorage on component mount
+  // Check authentication and load data
   useEffect(() => {
+    // Redirect to login if not authenticated
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
+    // Load saved jobs, applications, and notifications from localStorage
     const saved = JSON.parse(localStorage.getItem("savedJobs") || "[]");
     setSavedJobs(saved);
 
@@ -185,9 +192,20 @@ export default function JobSeekerDashboard() {
     const savedProfile = JSON.parse(
       localStorage.getItem("userProfile") || "{}",
     );
-    if (Object.keys(savedProfile).length > 0) {
-      setProfile({ ...profile, ...savedProfile });
-    }
+
+    // Merge user data with saved profile data, prioritizing user data for name/email
+    setProfile(prev => ({
+      ...prev,
+      ...savedProfile,
+      firstName: user.firstName || savedProfile.firstName || "",
+      lastName: user.lastName || savedProfile.lastName || "",
+      email: user.email || savedProfile.email || "",
+      phone: user.phone || savedProfile.phone || "",
+      jobTitle: user.title || savedProfile.jobTitle || "",
+      experience: user.experience || savedProfile.experience || "",
+      skills: user.skills || savedProfile.skills || ["React", "TypeScript", "Node.js"],
+      preferredLocation: user.location || savedProfile.preferredLocation || "",
+    }));
 
     const savedNotifications = JSON.parse(
       localStorage.getItem("notifications") || "[]",
@@ -196,7 +214,7 @@ export default function JobSeekerDashboard() {
 
     const views = JSON.parse(localStorage.getItem("profileViews") || "0");
     setProfileViews(views);
-  }, []);
+  }, [user, navigate]);
 
   const handleSaveJob = (jobId: number) => {
     let updatedSavedJobs;
