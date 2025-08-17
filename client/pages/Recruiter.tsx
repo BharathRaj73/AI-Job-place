@@ -152,6 +152,15 @@ export default function Recruiter() {
     alert(`Application status updated to ${newStatus}!`);
   };
 
+  // Function to bulk delete applications for a job
+  const handleBulkDeleteApplications = (jobId: number) => {
+    if (confirm("Are you sure you want to delete ALL applications for this job? This action cannot be undone.")) {
+      const updatedApplications = applications.filter(app => app.jobId !== jobId);
+      setApplications(updatedApplications);
+      alert("All applications for this job have been deleted!");
+    }
+  };
+
   // Function to add sample job posts for testing
   const addSampleJobPosts = () => {
     const sampleJobs = [
