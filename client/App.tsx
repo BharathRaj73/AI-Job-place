@@ -8,6 +8,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Homepage from "./pages/Homepage";
 import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
+import Profile from "./pages/Profile";
 import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
 import JobSeekerDashboard from "./pages/JobSeekerDashboard";
