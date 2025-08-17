@@ -66,7 +66,10 @@ export default function Profile() {
   useEffect(() => {
     // Load user data from auth context
     if (user) {
-      setProfile(user);
+      setProfile({
+        ...user,
+        skills: user.skills || [], // Ensure skills is always an array
+      });
     } else {
       // If no user data, redirect to login
       navigate("/login");
@@ -79,10 +82,10 @@ export default function Profile() {
   };
 
   const handleAddSkill = () => {
-    if (skillInput.trim() && !profile.skills.includes(skillInput.trim())) {
+    if (skillInput.trim() && !(profile.skills || []).includes(skillInput.trim())) {
       setProfile((prev) => ({
         ...prev,
-        skills: [...prev.skills, skillInput.trim()],
+        skills: [...(prev.skills || []), skillInput.trim()],
       }));
       setSkillInput("");
     }
@@ -91,7 +94,7 @@ export default function Profile() {
   const handleRemoveSkill = (skillToRemove: string) => {
     setProfile((prev) => ({
       ...prev,
-      skills: prev.skills.filter((skill) => skill !== skillToRemove),
+      skills: (prev.skills || []).filter((skill) => skill !== skillToRemove),
     }));
   };
 
@@ -365,9 +368,9 @@ export default function Profile() {
                   </Button>
                 </div>
 
-                {profile.skills.length > 0 && (
+                {(profile.skills || []).length > 0 && (
                   <div className="flex flex-wrap gap-2">
-                    {profile.skills.map((skill, index) => (
+                    {(profile.skills || []).map((skill, index) => (
                       <Badge
                         key={index}
                         variant="secondary"
