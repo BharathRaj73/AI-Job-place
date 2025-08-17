@@ -133,6 +133,7 @@ export default function Recruiter() {
 
   const [jobPosts, setJobPosts] = useState<any[]>([]);
   const [applications, setApplications] = useState<any[]>([]);
+  const [selectedApplications, setSelectedApplications] = useState<number[]>([]);
 
   // Function to delete an application
   const handleDeleteApplication = (applicationId: number) => {
