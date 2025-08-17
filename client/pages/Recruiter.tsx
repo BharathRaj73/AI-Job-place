@@ -637,7 +637,7 @@ export default function Recruiter() {
                             >
                               View Applications (
                               {
-                                mockApplications.filter(
+                                applications.filter(
                                   (app) => app.jobId === job.id,
                                 ).length
                               }
