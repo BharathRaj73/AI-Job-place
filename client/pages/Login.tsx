@@ -14,13 +14,28 @@ export default function Login() {
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleSignIn = async (e) => {
+  const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000))
       if (email && password) {
-        navigate("/dashboard/job-seeker")
+        // Simulate user authentication
+        const userData = {
+          id: Date.now(),
+          firstName: "John",
+          lastName: "Doe",
+          email: email,
+          userType: "job_seeker",
+          isAuthenticated: true,
+          profileCompleted: true, // Existing user has completed profile
+        }
+
+        login(userData)
+
+        // If user has completed profile, go to profile page to view/edit
+        // If not completed, go to profile page to complete
+        navigate("/profile")
       } else {
         alert("Please enter valid credentials")
       }
