@@ -666,15 +666,24 @@ export default function JobSeekerDashboard() {
                         </div>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setActiveTab("profile")}
-                        className="mb-2"
-                      >
-                        Complete Profile
-                      </Button>
+                    <div className="text-right space-y-2">
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setActiveTab("profile")}
+                        >
+                          Complete Profile
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={addSampleData}
+                          className="text-xs"
+                        >
+                          Add Sample Data
+                        </Button>
+                      </div>
                       <div className="text-xs text-muted-foreground">
                         Profile {Math.floor((
                           [profile.firstName, profile.lastName, profile.email, profile.jobTitle, profile.phone].filter(Boolean).length / 5
