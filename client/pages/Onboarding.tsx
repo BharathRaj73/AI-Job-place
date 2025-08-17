@@ -10,6 +10,7 @@ type UserType = "job_seeker" | "recruiter" | null;
 
 export default function Onboarding() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [selectedType, setSelectedType] = useState<UserType>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
