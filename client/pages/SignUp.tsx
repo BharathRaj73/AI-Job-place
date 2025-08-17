@@ -100,11 +100,23 @@ export default function SignUp() {
       firstName: "John",
       lastName: "Doe",
       email: "john.doe@gmail.com",
-      userType: "job_seeker",
+      password: "google_auth", // Special password for Google users
+      userType: userType,
       isAuthenticated: true,
-      profileCompleted: false,
-      skills: [], // Initialize empty skills array
+      profileCompleted: true,
+      phone: "",
+      location: "",
+      title: "",
+      summary: "",
+      experience: "",
+      education: "",
+      skills: [],
     };
+
+    // Store user in localStorage for later login validation
+    const existingUsers = JSON.parse(localStorage.getItem("users") || "[]");
+    existingUsers.push(userData);
+    localStorage.setItem("users", JSON.stringify(existingUsers));
 
     login(userData);
     navigate("/profile");
