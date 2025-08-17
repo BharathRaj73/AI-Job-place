@@ -1015,7 +1015,7 @@ export default function Recruiter() {
                                       </Badge>
                                     </div>
 
-                                    <div className="flex gap-2">
+                                    <div className="flex gap-2 flex-wrap">
                                       <Button variant="outline" size="sm">
                                         <Download className="w-4 h-4 mr-1" />
                                         Resume
@@ -1023,7 +1023,27 @@ export default function Recruiter() {
                                       <Button variant="outline" size="sm">
                                         Message
                                       </Button>
-                                      <Button size="sm">Review</Button>
+
+                                      {/* Status Change Dropdown */}
+                                      <select
+                                        value={application.status}
+                                        onChange={(e) => handleUpdateApplicationStatus(application.id, e.target.value)}
+                                        className="px-3 py-1 text-sm border border-gray-300 rounded-md bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                      >
+                                        <option value="pending">Pending</option>
+                                        <option value="reviewing">Reviewing</option>
+                                        <option value="interviewed">Interviewed</option>
+                                        <option value="accepted">Accepted</option>
+                                        <option value="rejected">Rejected</option>
+                                      </select>
+
+                                      <Button
+                                        size="sm"
+                                        variant="destructive"
+                                        onClick={() => handleDeleteApplication(application.id)}
+                                      >
+                                        Delete
+                                      </Button>
                                     </div>
                                   </div>
                                 </div>
