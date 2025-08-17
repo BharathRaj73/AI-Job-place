@@ -995,7 +995,7 @@ export default function Recruiter() {
                       <CardContent className="space-y-4">
                         <div className="text-center">
                           <p className="text-2xl font-bold text-blue-600">
-                            {mockJobPosts.length}
+                            {jobPosts.length}
                           </p>
                           <p className="text-sm text-slate-600">
                             Active Job Posts
