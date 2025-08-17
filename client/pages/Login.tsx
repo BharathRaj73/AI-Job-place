@@ -46,18 +46,22 @@ export default function Login() {
   }
 
   const handleGoogleSignIn = () => {
-    const userData = {
-      id: Date.now(),
-      firstName: "John",
-      lastName: "Doe",
-      email: "john.doe@gmail.com",
-      userType: "job_seeker",
-      isAuthenticated: true,
-      profileCompleted: true,
-      skills: ["React", "TypeScript", "Node.js"], // Example skills for existing user
+    const googleEmail = "john.doe@gmail.com"
+
+    // Check if Google user already exists
+    const existingUsers = JSON.parse(localStorage.getItem("users") || "[]")
+    const foundUser = existingUsers.find((user: any) => user.email === googleEmail)
+
+    if (foundUser) {
+      // Existing Google user
+      const { password: _, ...userWithoutPassword } = foundUser
+      login(userWithoutPassword)
+    } else {
+      // New Google user - redirect to onboarding to select user type
+      navigate("/onboarding")
+      return
     }
 
-    login(userData)
     navigate("/profile")
   }
 
