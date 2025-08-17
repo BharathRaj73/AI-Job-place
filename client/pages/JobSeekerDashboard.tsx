@@ -519,7 +519,10 @@ export default function JobSeekerDashboard() {
               </AvatarFallback>
             </Avatar>
 
-            <Button variant="ghost" size="sm" onClick={() => navigate("/")}>
+            <Button variant="ghost" size="sm" onClick={() => {
+              logout();
+              navigate("/");
+            }}>
               <LogOut className="w-4 h-4" />
             </Button>
           </div>
