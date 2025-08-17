@@ -12,7 +12,6 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Profile from "./pages/Profile";
 import Onboarding from "./pages/Onboarding";
-import Dashboard from "./pages/Dashboard";
 import JobSeekerDashboard from "./pages/JobSeekerDashboard";
 import JobDetail from "./pages/JobDetail";
 import TechNews from "./pages/TechNews";
