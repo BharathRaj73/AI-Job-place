@@ -86,6 +86,7 @@ export default function SignUp() {
       userType: "job_seeker",
       isAuthenticated: true,
       profileCompleted: false,
+      skills: [], // Initialize empty skills array
     };
 
     login(userData);
