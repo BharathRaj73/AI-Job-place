@@ -154,7 +154,9 @@ export default function SignUp() {
                 <Brain className="w-8 h-8 text-white" />
               </motion.div>
               <h1 className="text-3xl font-bold text-slate-900 mb-2">Create Account</h1>
-              <p className="text-slate-500">Join JobMatch AI and find your dream job</p>
+              <p className="text-slate-500">
+                Join JobMatch AI as a {userType === "job_seeker" ? "Job Seeker" : "Recruiter"}
+              </p>
             </div>
 
             {error && (
