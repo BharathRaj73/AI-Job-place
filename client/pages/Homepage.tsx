@@ -99,13 +99,6 @@ export default function Homepage() {
           </nav>
           <div className="flex items-center gap-2">
             <Button
-              variant="ghost"
-              onClick={() => navigate("/login")}
-              className="hover:scale-[1.02] transition"
-            >
-              Sign In
-            </Button>
-            <Button
               onClick={() => navigate("/onboarding")}
               className="bg-gradient-to-r from-blue-600 to-purple-600 hover:opacity-90 transition shadow-md hover:shadow-lg"
             >
@@ -149,14 +142,6 @@ export default function Homepage() {
             >
               Start Job Search
               <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              onClick={() => navigate("/login")}
-              className="text-lg px-8 py-6 h-auto hover:scale-[1.02] transition"
-            >
-              Sign In
             </Button>
           </motion.div>
           <div className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-5 max-w-4xl mx-auto">
