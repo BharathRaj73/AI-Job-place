@@ -64,11 +64,23 @@ export default function SignUp() {
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
-        userType: "job_seeker",
+        password: formData.password, // Store password for validation
+        userType: userType,
         isAuthenticated: true,
-        profileCompleted: false,
-        skills: [], // Initialize empty skills array
+        profileCompleted: true,
+        phone: "",
+        location: "",
+        title: "",
+        summary: "",
+        experience: "",
+        education: "",
+        skills: [],
       };
+
+      // Store user in localStorage for later login validation
+      const existingUsers = JSON.parse(localStorage.getItem("users") || "[]");
+      existingUsers.push(userData);
+      localStorage.setItem("users", JSON.stringify(existingUsers));
 
       login(userData);
       
